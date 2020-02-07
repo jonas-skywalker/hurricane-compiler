@@ -1,10 +1,15 @@
 import funktionen as blocks
 import itertools
 
+'''Wrapper over blocks.FL_STAT'''
+def follow_with(stmt):
+    return blocks.FL_STAT(stmt)
+
 def parse_stmt(tokens):
     (word, label) = next(tokens)
     if lable == "closed_bracket":
-        return Epsilon-Block
+        # Create Epsilon-Block
+        return blocks.FL_STAT("END")
     elif label == "ident":
         return parse_assign(word, tokens)
     elif label == "int":
@@ -19,19 +24,21 @@ def parse_assign(ident, tokens):
         for (a, b) in zip(tokens, "();"):
             assert a == b
         after = parse_stmt(tokens)
-        return built input-block
+        # Create Input-Block
+        return None
     else:
         newtokens = itertools.chain([word], tokens)
         expr = parse_expr(newtokens)
         after = parse_stmt(newtokens)
-        return ASSIGN(ident, expr, after)
+        return blocks.ASSIGN(ident, expr, follow_with(after))
 
 def parse_decl(tokens):
     ident = next(tokens)
     assert ident[1] == "ident"
     assert next(tokens) == "semicolon"
     after = parse_stmt(tokens)
-    return built decl-block
+    # Create Declaration-Block
+    return None
 
 STMT = 0
 EXPR = 1
@@ -54,22 +61,24 @@ def parses(fn, *nodes):
 
 @parses(EXPR, STMT)
 def parse_while(condition, block, after):
-    return while-block
+    # Create While-Block
+    return blocks.WHILE(condition, block, follow_with(after))
 
 @parses(EXPR, STMT)
 def parse_if(condition, block, after):
-    return if-block
+    # Create If-Block
+    return blocks.IF_COND(condition, block, follow_with(after))
 
 @parses(EXPR)
 def parse_print(value, after):
-    return print-block
+    # Create Print-Block
+    return None
 
 def parse_expr(tokens):
     exp = []
     for (word, label) in tokens:
         if label in ["semicolon", "closed_bracket"]:
             exp.append((word, label))
-
     return parse_expr_zero(exp)
 
 def parse_expr_zero(exp):
