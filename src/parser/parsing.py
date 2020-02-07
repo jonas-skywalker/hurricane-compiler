@@ -9,7 +9,11 @@ def follow_with(stmt):
     return blocks.FL_STAT(stmt)
 
 def parse_stmt(tokens):
-    (word, label) = next(tokens)
+    try:
+        (word, label) = next(tokens)
+    except:
+        # Create Epsilon-Block
+        return blocks.FL_STAT("END")
     if label == "closed_bracket":
         # Create Epsilon-Block
         return blocks.FL_STAT("END")
@@ -90,7 +94,7 @@ def parse_expr(tokens):
         if label in ["semicolon", "closed_bracket"]:
             break
         exp.append((word, label))
-    return parse_expr_zero(exp)
+    return parse_expr_m1(exp)
 
 def parse_expr_m1(exp):
     for (i, (word, label)) in enumerate(exp):
@@ -136,10 +140,12 @@ def parse_expr_three(exp):
     ident = None
     lit = None
     e0 = None
-    if exp[1] == "ident":
-        ident = exp[0]
-    elif exp[1] == "lit":
-        lit = exp[0]
+    if head[1] == "ident":
+        ident = head[0]
+        assert len(exp) == 1
+    elif head[1] == "lit":
+        lit = head[0]
+        assert len(exp) == 1
     else:
         assert head[1] == "open_bracket"
         assert exp[-1][1] == "closed_bracket"
