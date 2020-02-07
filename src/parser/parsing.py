@@ -1,13 +1,16 @@
 import funktionen as blocks
 import itertools
 
+def parse(tokens):
+    return parse_stmt(tokens)
+
 '''Wrapper over blocks.FL_STAT'''
 def follow_with(stmt):
     return blocks.FL_STAT(stmt)
 
 def parse_stmt(tokens):
     (word, label) = next(tokens)
-    if lable == "closed_bracket":
+    if label == "closed_bracket":
         # Create Epsilon-Block
         return blocks.FL_STAT("END")
     elif label == "ident":
@@ -42,6 +45,13 @@ def parse_decl(tokens):
 
 STMT = 0
 EXPR = 1
+
+def parameterized(dec):
+    def layer(*args, **kwargs):
+        def repl(f):
+            return dec(f, *args, **kwargs)
+        return repl
+    return layer
 
 @parameterized
 def parses(fn, *nodes):
@@ -78,8 +88,20 @@ def parse_expr(tokens):
     exp = []
     for (word, label) in tokens:
         if label in ["semicolon", "closed_bracket"]:
-            exp.append((word, label))
+            break
+        exp.append((word, label))
     return parse_expr_zero(exp)
+
+def parse_expr_m1(exp):
+    for (i, (word, label)) in enumerate(exp):
+        if label == "equals":
+            index = i
+            break
+    else:
+        return blocks.EXPRm1(parse_expr_zero(exp))
+    e1 = exp[:index]
+    e0 = exp[index + 1:]
+    return blocks.EXPRm1(parse_expr_zero(e1), parse_expr_m1(e0))
 
 def parse_expr_zero(exp):
     for (i, (word, label)) in enumerate(exp):
@@ -98,16 +120,16 @@ def parse_expr_one(exp):
             index = i
             break
     else:
-        return blocks.EXPR0(parse_expr_one(exp))
+        return blocks.EXPR2(parse_expr_two(exp))
     e1 = exp[:index]
     e0 = exp[index + 1:]
     return blocks.EXPR2(parse_expr_two(e1), parse_expr_one(e0))
 
 def parse_expr_two(exp):
     if exp[0][1] == "minus":
-        return blocks.EXPR2("neg", parse_expr_two(exp[1:]))
+        return blocks.EXPR2(parse_expr_two(exp[1:]))
     else:
-        return blocks.EXPR2("e3", None, parse_expr_three(exp))
+        return blocks.EXPR2(None, parse_expr_three(exp))
 
 def parse_expr_three(exp):
     head = exp[0]
