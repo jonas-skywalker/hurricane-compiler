@@ -1,3 +1,4 @@
+# SUPERDUPER WICHTIGEN GLOBALEN VARIABLEN
 AUTOBOTS = r"""
 ________  ___  ___  _________  ________  ________  ________  _________  ________
 |\   __  \|\  \|\  \|\___   ___\\   __  \|\   __  \|\   __  \|\___   ___\\   ____\
@@ -20,6 +21,10 @@ ________  ________   ________  _______   _____ ______   ________  ___       ____
              \|_________\|_________|
 """
 
+# Weniger wichtige globale Variablen
+env = {}
+s = 0
+
 class IF_COND:
 
     # expr: Bedingung unter der der if-Block ausgeführt wird
@@ -33,24 +38,8 @@ class IF_COND:
     def ausgabe(self, v):
         return (v)*" " + "IF\n" + self.expr.ausgabe(v+1) + "\n" + self.if_stat.ausgabe(v+2) + "\n" + self.fl_stat.ausgabe(v+1)
 
-    def generiere_asm(self, v):
-        return (v)*" " + "if " + self.expr.generiere_asm(v) + ":\n" + self.if_stat.generiere_asm(v+4) + "\n" + self.fl_stat.generiere_asm(v)
-
-class ASSIGN:
-
-    # id: Name der Variable
-    # expr: Wert der Variable (bisher nur integer)
-    # fl_stat: Die folgenden Statements
-    def __init__(self, id, expr, fl_stat):
-        self.id = id
-        self.expr = expr
-        self.fl_stat = fl_stat
-
-    def ausgabe(self, v):
-        return (v)*" " + "ASSIGN\n" + (v+1)*" " + self.id + "\n" + self.expr.ausgabe(v+2)+ "\n" + self.fl_stat.ausgabe(v+1)
-
-    def generiere_asm(self, v):
-        return (v)*" " + self.id + "=" + self.expr.ausgabe(0) + "\n" + self.fl_stat.generiere_asm(v)
+    def generiere_python(self, v):
+        return (v)*" " + "if " + self.expr.generiere_python(v) + ":\n" + self.if_stat.generiere_python(v+4) + "\n" + self.fl_stat.generiere_python(v)
 
 class WHILE:
 
@@ -66,23 +55,65 @@ class WHILE:
         return (v) * " " + "WHILE\n" + self.expr.ausgabe(v + 1) + "\n" + self.wh_stat.ausgabe(
             v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
     
-    def generiere_asm(self, v):
-        return (v)*" " + "while " + self.expr.generiere_asm(v) + ":\n" + self.wh_stat.generiere_asm(v+4) + "\n" + self.fl_stat.generiere_asm(v)
+    def generiere_python(self, v):
+        return (v)*" " + "while " + self.expr.generiere_python(v) + ":\n" + self.wh_stat.generiere_python(v+4) + "\n" + self.fl_stat.generiere_python(v)
 
-    
+class ASSIGN:
+
+    # id: Name der Variable
+    # expr: Wert der Variable (bisher nur integer)
+    # fl_stat: Die folgenden Statements
+    def __init__(self, id, expr, fl_stat):
+        self.id = id
+        self.expr = expr
+        self.fl_stat = fl_stat
+
+    def ausgabe(self, v):
+        return (v)*" " + "ASSIGN\n" + (v+1)*" " + self.id + "\n" + self.expr.ausgabe(v+2)+ "\n" + self.fl_stat.ausgabe(v+1)
+
+    def generiere_python(self, v):
+        return (v)*" " + self.id + "=" + self.expr.generiere_python(v) + "\n" + self.fl_stat.generiere_python(v)
+
+    def generiere_asm(self, s, env):
+        # Speicher Variable
+        env[self.id] = s
+        # Verschiebe Offset
+        s -= 4
+
 class EXPR:
 
     # expr: String
-    def __init__(self, lhand, op="",  rhand=""):
-        self.lhand = lhand
-        self.op = op
-        self.rhand = rhand
-    
+    def __init__(self, arg):
+        arg = arg.split()
+        self.lhand = str(arg[0])
+        if len(arg) != 3:
+            self.op = ""
+            self.rhand = ""
+        else:
+            self.op = str(arg[1])
+            self.rhand = str(arg[2])
+        
     def ausgabe(self, v):
         return (v)*" " + self.lhand + self.op + self.rhand
     
-    def generiere_asm(self, v):
+    def generiere_python(self, v):
         return (v)*" " + self.lhand + self.op + self.rhand
+    
+    # Addiert zwei Zahlen, sonst nichts
+    def generiere_asm(self, s, r0, r1):
+        # Speicher erste Zahl im Stack:
+        anweisung = "li "+r0+" "+self.lhand+"\n"
+        # Addiere zwei Zahlen
+        anweisung += self.generate_op()+" "+r1+" "+r0+" "+self.rhand+"\n"
+        # Schreibe in den Stack
+        anweisung += "sw "+r1+" "+str(s)+"($sp)"+"\n"
+        return anweisung
+    
+    def generate_op():
+        if self.op == "+":
+            return "add"
+        if self.op == "-":
+            return "sub"
 
 class FL_STAT:
 
@@ -96,11 +127,11 @@ class FL_STAT:
         else:
             return self.fl_stat.ausgabe(v)
     
-    def generiere_asm(self, v):
+    def generiere_python(self, v):
         if self.fl_stat == "END":
             return (v)*" " + "pass"
         else:
-            return self.fl_stat.generiere_asm(v)
+            return self.fl_stat.generiere_python(v)
 
 class START:
 
@@ -110,15 +141,10 @@ class START:
     def ausgabe(self):
         print(self.fl_stat.ausgabe(0))
     
-    def generiere_asm(self):
-        return self.fl_stat.generiere_asm(0)
+    def generiere_python(self):
+        return self.fl_stat.generiere_python(0)
 
 
 def optimus_prime(start):
-    print(AUTOBOTS)
-    print(". . .")
-
-    
-
-    print(ASSEMBLE)
+    pass
 
