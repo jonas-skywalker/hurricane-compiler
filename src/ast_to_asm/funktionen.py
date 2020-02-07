@@ -77,6 +77,11 @@ class START:
         print(self.fl_stat.ausgabe(0))
 
 
+class EXPRm1:
+    def __init__(self, e0, comparandm1=None):
+        self.e0 = e0
+        self.comparandm1 = comparandm1
+
 class EXPR0:
 
     # EXPR0 nimmt Instanz von Typ EXPR1 (e1)
