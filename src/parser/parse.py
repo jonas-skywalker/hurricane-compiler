@@ -65,11 +65,24 @@ def parse_print(value, after):
     return print-block
 
 def parse_expr(tokens):
-    exp = lalb
+    exp = []
     for (word, label) in tokens:
         if label in ["semicolon", "closed_bracket"]:
+            exp.append((word, label))
 
-    return parse_expr_one(tokens)
+    return parse_expr_zero(exp)
+
+def parse_expr_zero(exp):
+    if any(map(lambda x: x[1] == "plus"), exp):
+        e1, e0 = exp.split(("+", "plus"))
+        return blocks.EXPR0(parse_expr_one(e1), parse_expr_zero(e0))
+    else:
+        return blocks.EXPR0(parse_expr_one(exp))
 
 def parse_expr_one(tokens):
     (word, label) = next(tokens)
+    if any(map(lambda x: x[1] == "multi"), exp):
+        e1, e0 = exp.split(("*", "multi"))
+        return blocks.EXPR0(parse_expr_one(e1), parse_expr_zero(e0))
+    else:
+        return blocks.EXPR0(parse_expr_one(exp))

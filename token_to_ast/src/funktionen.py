@@ -66,3 +66,28 @@ class START:
     
     def ausgabe(self):
         print(self.fl_stat.ausgabe(0))
+
+class EXPR0:
+    def __init__(self, e1, summand0=None):
+        self.e1 = e1
+        self.summand = summand
+
+class EXPR1:
+    def __init__(self, e2, factor1=None):
+        self.e2 = e2
+        self.factor = factor
+
+class EXPR2:
+    '''self.type = "neg" | "e3" '''
+    def __init__(self, type, negated2=None, e3=None):
+        self.type = type
+        self.negated2 = negated2
+        self.e3 = e3
+
+class EXPR3:
+    '''type = "ident" | "lit" | "e0" '''
+    def __init__(self, type, ident=None, lit=None, e0=None):
+        self.type = type
+        self.ident = ident
+        self.lit = lit
+        self.e0 = e0
