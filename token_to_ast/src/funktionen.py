@@ -20,6 +20,17 @@ class ASSIGN:
     
     def ausgabe(self, v):
         return (v)*" " + "ASSIGN\n" + (v+1)*" " + self.id + "\n" + self.expr.ausgabe(v+2)+ "\n" + self.fl_stat.ausgabe(v+1)
+
+class WHILE:
+
+    def __init__(self, expr, wh_stat, fl_stat):
+        self.expr = expr
+        self.wh_stat = wh_stat
+        self.fl_stat = fl_stat
+
+    def ausgabe(self, v):
+        return (v) * " " + "WHILE\n" + self.expr.ausgabe(v + 1) + "\n" + self.wh_stat.ausgabe(
+            v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
     
 class EXPR:
 

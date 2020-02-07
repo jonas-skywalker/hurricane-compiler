@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 def parse_file(filename):
-    c_code = get_code(filename)
+    c_code = get_source(filename)
     print(c_code)
 
 
@@ -14,7 +13,7 @@ def get_source(filename):
 if __name__ == '__main__':
     filename = "src/test.txt"
     parse_file(filename)
-=======
+
 matches = [
     (["(", ")", "{", "}"], "bracket"),
     (["+", "-", "*", "/", "<="], "bin_op"),
@@ -66,4 +65,3 @@ def match_keywords(word):
     keywords = ["input", "while", "print", "if"]
     if word in keywords:
         return (word, "keyword")
->>>>>>> b9263521953e2918e75754d02c72c56eee20bf71
