@@ -74,11 +74,14 @@ class ASSIGN:
     def generiere_python(self, v):
         return (v)*" " + self.id + "=" + self.expr.generiere_python(v) + "\n" + self.fl_stat.generiere_python(v)
 
-    def generiere_asm(self, s, env):
+    def generiere_asm(self, s, env, r0, r1):
+        anweisung = self.expr.generiere_asm(s, r0, r1)
         # Speicher Variable
         env[self.id] = s
         # Verschiebe Offset
         s -= 4
+        return anweisung
+
 
 class EXPR:
 
@@ -109,7 +112,7 @@ class EXPR:
         anweisung += "sw "+r1+" "+str(s)+"($sp)"+"\n"
         return anweisung
     
-    def generate_op():
+    def generate_op(self):
         if self.op == "+":
             return "add"
         if self.op == "-":
