@@ -43,16 +43,6 @@ class WHILE:
             v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
 
 
-class EXPR:
-
-    # expr: String
-    def __init__(self, expr):
-        self.expr = expr
-
-    def ausgabe(self, v):
-        return (v) * " " + self.expr
-
-
 class FL_STAT:
 
     def __init__(self, fl_stat):
@@ -77,13 +67,13 @@ class START:
 class EXPR0:
     def __init__(self, e1, summand0=None):
         self.e1 = e1
-        self.summand = summand
+        self.summand0 = summand0
 
 
 class EXPR1:
     def __init__(self, e2, factor1=None):
         self.e2 = e2
-        self.factor = factor
+        self.factor1 = factor1
 
 
 class EXPR2:
@@ -103,3 +93,4 @@ class EXPR3:
         self.ident = ident
         self.lit = lit
         self.e0 = e0
+    
