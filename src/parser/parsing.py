@@ -1,5 +1,7 @@
-import funktionen as blocks
 import itertools
+import sys
+sys.path.insert(1, './../ast_to_asm/')
+import funktionen as blocks
 
 def parse(tokens):
     return parse_stmt(tokens)

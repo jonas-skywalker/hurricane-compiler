@@ -102,12 +102,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/parser/parsing.py</url>
-          <line>147</line>
+          <line>149</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/parser/parsing.py</url>
-          <line>144</line>
+          <line>146</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
