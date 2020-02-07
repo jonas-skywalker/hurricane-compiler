@@ -1,3 +1,11 @@
+matches = [
+    (["(", ")", "{", "}"], "bracket"),
+    (["+", "-", "*", "/", "<="], "bin_op"),
+    (["-"], "un_op"),
+    (["input", "while", "print", "if"], "keyword"),
+    (["int", ";", "="], "misc")
+]
+
 def lex(source):
     tokens = []
     trace = ""
@@ -5,21 +13,26 @@ def lex(source):
         if c.isspace():
             continue
 
-        if not (c.isalpha() or c.isdigit())
+        if not (c.isalpha() or c.isdigit()):
             def match(matches, clazz):
                 global trace
                 if trace in matches:
                     tokens.append((trace, clazz))
                     return True
                 return False
+            for m in matches:
+                if match(*m):
+                    continue
+            else:
+                if trace.isdigit():
+                    tokens.append((trace, "literal"))
+                    trace = ""
+                    continue
+                if trace.isalpha():
+                    tokens.append((trace, "ident"))
+                    trace = ""
+                    continue
 
-        matches = [
-            (["(", ")", "{", "}"], "bracket"),
-            (["+", "-", "*", "/", "<="], "bin_op"),
-            (["-"], "un_op"),
-            (["input", "while", "print", "if"], "keyword"),
-            (["int", ";"], "misc")
-        ]
 
         trace += c
 
