@@ -16,7 +16,6 @@ def split_symbols(source):
         ("<=", "smaller_equals"),
         (">=", "bigger_equals"),
         ("==", "equals"),
-        ("=", "assign"),
         ("+", "plus"),
         ("-", "minus"),
         ("*", "multi"),
@@ -58,6 +57,8 @@ def tokenise_source(source):
     spl = match_keywords(spl)
     spl = match_idents_and_lits(spl)
     return spl
+
+
 
 def lex(source):
     pass
