@@ -101,15 +101,20 @@ class EXPR0:
 		# Schreibe die Zahl n $to
 		# Wenn eine Variable aufgerufen wird dann wird der lw-Befehl verwendet,
 		# sonst wird eine Zahl in den Register geladen
-		asm = "li $t1 0\n"
-		asm += self.e1.generiere_asm()+"\n"
-		asm += "sw $t0 "+str(s)+"($sp)\n"
-		asm += "subi $sp $sp 4\n"
-		s -= 4
+		asm = self.e1.generiere_asm()+"\n" # Richtig
 		if self.summand0 != None:
+			asm += "sw $t0 "+str(s)+"($sp)\n"
+			ls = s
+			asm += "subi $sp $sp 4\n"
 			asm += self.summand0.generiere_asm()+"\n"
-		asm += "lw $t1 "+str(s)+"($sp)\n"
-		asm += "add $t0 $t0 $t1"
+			asm += "addi $sp $sp 4\n"
+
+			asm += "lw $t1 "+str(ls-s)+"($sp)\n"
+			asm += "add $t0 $t0 $t1\n"
+			s = ls
+		
+		asm += "sw $t0 "+str(s)+"($sp)"
+
 		return asm
 
 
