@@ -1,5 +1,6 @@
 import funktionen as fn
 
+# Programm geht von unten nach oben durch
 
 b = fn.ASSIGN("y", fn.EXPR("4"), fn.FL_STAT("END"))
 w = fn.WHILE(fn.EXPR("3<4"), fn.FL_STAT("END"), fn.FL_STAT(b))
