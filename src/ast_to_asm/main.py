@@ -14,3 +14,4 @@ datei = open("src/ast_to_asm/out.py", "w")
 datei.write(s.generiere_asm())
 
 print(s.generiere_asm())
+fn.optimus_prime("h")
