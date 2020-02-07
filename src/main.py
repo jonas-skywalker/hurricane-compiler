@@ -1,5 +1,5 @@
 def parse_file(filename):
-    c_code = get_code(filename)
+    c_code = get_source(filename)
     print(c_code)
 
 

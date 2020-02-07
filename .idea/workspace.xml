@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="383112db-4dce-4bb7-9dcd-b639fbf32a62" name="Default Changelist" comment="">
+    <list default="true" id="350a6aa7-19b4-4d5f-8989-f9dd106a6e89" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lexer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer.py" afterDir="false" />
     </list>
@@ -21,10 +21,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="1XSE6iOmvVyRbixlT23WnmKWu3L" />
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Marc\Documents\Code\BwInf\Jugendforum\hurricane-compiler\src\parser" />
+=======
+  <component name="ProjectId" id="1XSDKVCvQsyIg4byNYMqrqvkTqj" />
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/token_to_ast/src/main.py" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Jonas Biba\PycharmProjects\hurricane-compiler\src" />
+      <recent name="C:\Users\Jonas Biba\PycharmProjects\hurricane-compiler\" />
+>>>>>>> 84737d609153be22b0939ebb7c9aa55077f98cc4
     </key>
   </component>
   <component name="RunDashboard">
@@ -40,7 +52,11 @@
     </option>
   </component>
   <component name="RunManager">
+<<<<<<< HEAD
     <configuration name="lexer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+=======
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+>>>>>>> 84737d609153be22b0939ebb7c9aa55077f98cc4
       <module name="hurricane-compiler" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -48,11 +64,19 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+<<<<<<< HEAD
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="C:\Users\Marc\Documents\Code\BwInf\Jugendforum\hurricane-compiler\src\parser\lexer.py" />
+=======
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/token_to_ast/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/token_to_ast/src/main.py" />
+>>>>>>> 84737d609153be22b0939ebb7c9aa55077f98cc4
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -63,7 +87,11 @@
     </configuration>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="Python.lexer" />
+=======
+        <item itemvalue="Python.main" />
+>>>>>>> 84737d609153be22b0939ebb7c9aa55077f98cc4
       </list>
     </recent_temporary>
   </component>
@@ -72,11 +100,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="383112db-4dce-4bb7-9dcd-b639fbf32a62" name="Default Changelist" comment="" />
-      <created>1581030921771</created>
+      <changelist id="350a6aa7-19b4-4d5f-8989-f9dd106a6e89" name="Default Changelist" comment="" />
+      <created>1581030539076</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1581030921771</updated>
+      <updated>1581030539076</updated>
     </task>
     <servers />
   </component>
@@ -85,7 +113,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
