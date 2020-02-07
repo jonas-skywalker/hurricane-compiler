@@ -94,3 +94,5 @@ class EXPR3:
         self.lit = lit
         self.e0 = e0
     
+    def generate_asm(self):
+        return self.e0
