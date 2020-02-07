@@ -1,3 +1,6 @@
+env = {}
+s = 0
+
 class IF_COND:
 
     # expr: Bedingung unter der der if-Block ausgeführt wird
@@ -41,6 +44,17 @@ class ASSIGN:
     def ausgabe(self, v):
         return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe() + "\n" + self.fl_stat.ausgabe(v + 1)
 
+    def generiere_asm(self, r0, r1):
+        global s
+
+        asm = self.expr.generiere_asm()#r0, r1)
+
+        # Speicher Offset von $sp zu der Variable
+        env[self.id] = s
+        # Verschiebe Offset um 4 Byte
+        s -= 4
+
+        return asm
 
 class FL_STAT:
 
@@ -77,6 +91,32 @@ class EXPR0:
             ausgabe = "+"+self.summand0.ausgabe()
         return self.e1.ausgabe()+ausgabe
 
+    def generiere_asm(self):
+        if self.summand0 != None:
+            # Schreibe die Zahl n $to
+            # Wenn eine Variable aufgerufen wird dann wird der lw-Befehl verwendet,
+            # sonst wird eine Zahl in den Register geladen
+            returner = self.e1.generiere_asm()
+            if "lw" in returner:
+                asm = self.e1.generiere_asm()
+            else:
+                asm = "li $t0 "+self.e1.generiere_asm()
+            asm += "\n"
+            # Addiere $t0 mit dem Summanden nach $t1
+            # 
+            returner = self.summand0.generiere_asm()
+            if "lw" in returner:
+                asm += self.summand0.generiere_asm()+"\n"
+                asm += "add $t2 "+r0+" "+r1
+            else:
+                asm += "add $t2"+" "+r0+" "+self.summand0.generiere_asm()
+            asm += "\n"
+            # Füge $t1 dem Stack zu
+            asm += "sw $t1 "+str(s)+"($sp)"+"\n"
+        else:
+            asm = self.e1.generiere_asm()
+        return asm
+
 
 class EXPR1:
 
@@ -91,7 +131,14 @@ class EXPR1:
         if self.factor1 != None:
             ausgabe = "*"+self.factor1.ausgabe()
         return self.e2.ausgabe()+ausgabe
-    
+
+    def generiere_asm(self):
+        asm = self.e2.generiere_asm()
+        if self.factor1 != None:
+            asm += " mul "+self.factor1.ausgabe()
+        return asm
+
+
 class EXPR2:
 
     # EXPR2 nimmt entweder einen negative Instanz von Typ EXPR2 (negated2)
@@ -102,17 +149,23 @@ class EXPR2:
         self.e3 = e3
     
     def ausgabe(self):
-        ausgabe = ""
         if self.negated2 != None:
             ausgabe = self.negated2.ausgabe()
         else:
             ausgabe = self.e3.ausgabe()
         return ausgabe
 
+    def generiere_asm(self):
+        if self.negated2 != None:
+            asm = self.negated2.generiere_asm()
+        else:
+            asm = self.e3.generiere_asm()
+        return asm
+
 
 class EXPR3:
 
-    # Entweder Name (ident), Zahl (lit) oder eingeklammerte Instanz von Typ EXPR0 (e0)
+    # Entweder Variablenname (ident), Zahl (lit) oder eingeklammerte Instanz von Typ EXPR0 (e0)
     def __init__(self, ident=None, lit=None, e0=None):
         self.ident = ident
         self.lit = lit
@@ -128,3 +181,14 @@ class EXPR3:
             ausgabe = self.e0.ausgabe()
         return ausgabe
     
+    def generiere_asm(self):
+        asm = ""
+        if self.ident != None:
+            # o: offset 
+            o = env[self.ident]
+            asm += "lw $t0 "+str(o)+"($sp)"
+        elif self.lit != None:
+            asm = self.lit
+        else:
+            asm = self.e0.generiere_asm()
+        return asm
