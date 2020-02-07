@@ -1,3 +1,5 @@
+import tokens
+
 def split_surround(source, c, label):
     spl = source.split(c)
     ret = []
@@ -9,13 +11,14 @@ def split_symbols(source):
     labels = [
         (" ", "space"),
         (";", "semicolon"),
-        ("{", "open_curly"),
-        ("}", "closed_curly"),
+        ("{", "open_bracket"),
+        ("}", "closed_bracket"),
         ("(", "open_bracket"),
         (")", "closed_bracket"),
         ("<=", "smaller_equals"),
         (">=", "bigger_equals"),
         ("==", "equals"),
+        ("=", "assign"),
         ("+", "plus"),
         ("-", "minus"),
         ("*", "multi"),
@@ -34,7 +37,7 @@ def split_symbols(source):
 
 def match_keywords(tokens):
     keywords = [
-        "if", "while", "print", "read", "int"
+        "if", "while", "print", "input", "int"
     ]
     for (index, (word, label)) in enumerate(tokens):
         if not label and word in keywords:
@@ -52,13 +55,11 @@ def match_idents_and_lits(tokens):
             tokens[index] = (word, new_label)
     return tokens
 
-def tokenise_source(source):
+def lex(source):
     spl = split_symbols(source)
     spl = match_keywords(spl)
     spl = match_idents_and_lits(spl)
     return spl
 
-
-
-def lex(source):
-    pass
+def token_stream(source):
+    return iter(lex(source))
