@@ -11,5 +11,5 @@ def get_source(filename):
 
 
 if __name__ == '__main__':
-    filename = "src/test.txt"
+    filename = "src/test.c"
     parse_file(filename)
