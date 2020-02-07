@@ -13,6 +13,6 @@ import funktionen as fn
 # datei = open("src/ast_to_asm/out.py", "w")
 # datei.write(s.generiere_python())
 
-a = fn.ASSIGN("x", fn.EXPR0(3), fn.FL_STAT("END"))
+ex0 = fn.EXPR0(fn.EXPR1(fn.EXPR2(fn.EXPR3("2"))))
 
-print(a.ausgabe(0))
+print(ex0.ausgabe())

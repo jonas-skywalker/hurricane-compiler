@@ -24,8 +24,7 @@ class ASSIGN:
         self.fl_stat = fl_stat
 
     def ausgabe(self, v):
-        return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe(
-            v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
+        return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe() + "\n" + self.fl_stat.ausgabe(v + 1)
 
 
 class WHILE:
@@ -67,10 +66,16 @@ class START:
 class EXPR0:
 
     # EXPR0 nimmt Instanz von Typ EXPR1 (e1)
-    # summand0: optionaler Summand
+    # summand0: optionaler Summand von Typ (e0)
     def __init__(self, e1, summand0=None):
         self.e1 = e1
         self.summand0 = summand0
+
+    def ausgabe(self):
+        ausgabe = ""
+        if self.summand0 != None:
+            ausgabe = "+"+self.summand0.ausgabe()
+        return self.e1.ausgabe()+ausgabe
 
 
 class EXPR1:
@@ -80,29 +85,46 @@ class EXPR1:
     def __init__(self, e2, factor1=None):
         self.e2 = e2
         self.factor1 = factor1
+
+    def ausgabe(self):
+        ausgabe = ""
+        if self.factor1 != None:
+            ausgabe = "*"+self.factor1.ausgabe()
+        return self.e2.ausgabe()+ausgabe
     
 class EXPR2:
-    '''self.typ = "neg" | "e3" '''
 
     # EXPR2 nimmt entweder einen negative Instanz von Typ EXPR2 (negated2)
     # oder nimmt Instanz von Typ EXPR3 (e3)
     # Keine Rechnung
-    def __init__(self, typ, negated2=None, e3=None):
-        self.typ = typ
+    def __init__(self, negated2=None, e3=None):
         self.negated2 = negated2
         self.e3 = e3
+    
+    def ausgabe(self):
+        ausgabe = ""
+        if self.negated2 != None:
+            ausgabe = self.negated2.ausgabe()
+        else:
+            ausgabe = self.e3.ausgabe()
+        return ausgabe
 
 
 class EXPR3:
-    '''typ = "ident" | "lit" | "e0" '''
 
     # Entweder Name (ident), Zahl (lit) oder eingeklammerte Instanz von Typ EXPR0 (e0)
-    def __init__(self, typ, ident=None, lit=None, e0=None):
-        self.typ = typ
+    def __init__(self, ident=None, lit=None, e0=None):
         self.ident = ident
         self.lit = lit
         self.e0 = e0
     
     def ausgabe(self):
-        if 
+        ausgabe = ""
+        if self.ident != None:
+            ausgabe = self.ident
+        elif self.lit != None:
+            ausgabe = self.lit
+        else:
+            ausgabe = self.e0.ausgabe()
+        return ausgabe
     
