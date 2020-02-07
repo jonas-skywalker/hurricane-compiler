@@ -13,20 +13,6 @@ class IF_COND:
             v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
 
 
-class ASSIGN:
-
-    # id: Name der Variable
-    # expr: Wert der Variable (bisher nur integer)
-    # fl_stat: Die folgenden Statements
-    def __init__(self, id, expr, fl_stat):
-        self.id = id
-        self.expr = expr
-        self.fl_stat = fl_stat
-
-    def ausgabe(self, v):
-        return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe() + "\n" + self.fl_stat.ausgabe(v + 1)
-
-
 class WHILE:
 
     # expr: Bedingung unter der der while-Block ausgeführt wird
@@ -40,6 +26,20 @@ class WHILE:
     def ausgabe(self, v):
         return (v) * " " + "WHILE\n" + self.expr.ausgabe(v + 1) + "\n" + self.wh_stat.ausgabe(
             v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
+
+
+class ASSIGN:
+
+    # id: Name der Variable
+    # expr: Wert der Variable (bisher nur integer)
+    # fl_stat: Die folgenden Statements
+    def __init__(self, id, expr, fl_stat):
+        self.id = id
+        self.expr = expr
+        self.fl_stat = fl_stat
+
+    def ausgabe(self, v):
+        return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe() + "\n" + self.fl_stat.ausgabe(v + 1)
 
 
 class FL_STAT:
@@ -117,7 +117,7 @@ class EXPR3:
         self.ident = ident
         self.lit = lit
         self.e0 = e0
-    
+
     def ausgabe(self):
         ausgabe = ""
         if self.ident != None:
