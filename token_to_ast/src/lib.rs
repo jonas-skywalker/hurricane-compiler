@@ -1,5 +1,21 @@
 // Erstellung des AST
 
+pub fn run() {
+    let mut n = Node::new("test".to_string());
+    println!("n: {:?}", n);
+    let mut c = Node::new("test2".to_string());
+    let c2 = Node::new("test3".to_string());
+
+    n.push_child(c);
+    println!("n:  {:?}", n);
+    let mut cu = n.find_child("test2").unwrap();
+    cu.push_child(c2);
+    println!("{:?}", n);
+}
+
+enum Token {
+}
+
 #[derive(Debug)]
 struct Node {
     op: String,
@@ -31,17 +47,4 @@ impl Node {
     fn return_op(&self) -> &str {
         &self.op
     }
-}
-
-pub fn run() {
-    let mut n = Node::new("test".to_string());
-    println!("n: {:?}", n);
-    let mut c = Node::new("test2".to_string());
-    let c2 = Node::new("test3".to_string());
-
-    n.push_child(c);
-    println!("n:  {:?}", n);
-    let mut cu = n.find_child("test2").unwrap();
-    cu.push_child(c2);
-    println!("{:?}", n);
 }
