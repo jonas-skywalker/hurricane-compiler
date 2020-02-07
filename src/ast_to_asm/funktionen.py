@@ -112,8 +112,13 @@ class START:
     
     def generiere_asm(self):
         return self.fl_stat.generiere_asm(0)
-    
+
+
 def optimus_prime(start):
     print(AUTOBOTS)
     print(". . .")
+
+    
+
     print(ASSEMBLE)
+
