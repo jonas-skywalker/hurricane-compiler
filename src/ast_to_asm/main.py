@@ -13,10 +13,6 @@ import funktionen as fn
 # datei = open("src/ast_to_asm/out.py", "w")
 # datei.write(s.generiere_python())
 
-a = fn.ASSIGN("x", fn.EXPR("3 - 4"), fn.FL_STAT("END"))
+ex0 = fn.EXPR0(fn.EXPR1(fn.EXPR2(fn.EXPR3("2"))))
 
-# print(a.expr.generiere_asm(fn.s, r"$t0", r"$t1"))
-print(fn.s)
-print(a.generiere_asm(fn.s, fn.env, r"$t0", r"$t1"))
-
-print(fn.env)
+print(ex0.ausgabe())
