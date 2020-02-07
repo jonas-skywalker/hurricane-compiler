@@ -24,7 +24,7 @@ def parse_assign(ident, tokens):
         newtokens = itertools.chain([word], tokens)
         expr = parse_expr(newtokens)
         after = parse_stmt(newtokens)
-        return built assign-block
+        return ASSIGN(ident, expr, after)
 
 def parse_decl(tokens):
     ident = next(tokens)
@@ -73,16 +73,44 @@ def parse_expr(tokens):
     return parse_expr_zero(exp)
 
 def parse_expr_zero(exp):
-    if any(map(lambda x: x[1] == "plus"), exp):
-        e1, e0 = exp.split(("+", "plus"))
-        return blocks.EXPR0(parse_expr_one(e1), parse_expr_zero(e0))
+    for (i, (word, label)) in enumerate(exp):
+        if label == "plus":
+            index = i
+            break
     else:
         return blocks.EXPR0(parse_expr_one(exp))
+    e1 = exp[:index]
+    e0 = exp[index + 1:]
+    return blocks.EXPR1(parse_expr_one(e1), parse_expr_zero(e0))
 
-def parse_expr_one(tokens):
-    (word, label) = next(tokens)
-    if any(map(lambda x: x[1] == "multi"), exp):
-        e1, e0 = exp.split(("*", "multi"))
-        return blocks.EXPR0(parse_expr_one(e1), parse_expr_zero(e0))
+def parse_expr_one(exp):
+    for (i, (word, label)) in enumerate(exp):
+        if label == "multi":
+            index = i
+            break
     else:
         return blocks.EXPR0(parse_expr_one(exp))
+    e1 = exp[:index]
+    e0 = exp[index + 1:]
+    return blocks.EXPR2(parse_expr_two(e1), parse_expr_one(e0))
+
+def parse_expr_two(exp):
+    if exp[0][1] == "minus":
+        return blocks.EXPR2("neg", parse_expr_two(exp[1:]))
+    else:
+        return blocks.EXPR2("e3", None, parse_expr_three(exp))
+
+def parse_expr_three(exp):
+    head = exp[0]
+    ident = None
+    lit = None
+    e0 = None
+    if exp[1] == "ident":
+        ident = exp[0]
+    elif exp[1] == "lit":
+        lit = exp[0]
+    else:
+        assert head[1] == "open_bracket"
+        assert exp[-1][1] == "closed_bracket"
+        e0 = parse_expr_zero(exp[1:-1]) # Get rid of brackets
+    return blocks.EXPR3(ident, lit, e0)
