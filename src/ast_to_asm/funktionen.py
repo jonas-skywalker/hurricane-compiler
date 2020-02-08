@@ -89,7 +89,7 @@ class EXPRm1:
 	def ausgabe(self):
 		ausgabe = ""
 		if self.comparandm1 != None:
-			ausgabe = "==" self.comparandm1.ausgabe()
+			ausgabe = "=="+self.comparandm1.ausgabe()
 		return self.e0.ausgabe() + ausgabe
 
 class EXPR0:
@@ -134,10 +134,9 @@ class EXPR0:
 			# Addiere den Wert in $t0 udn in $t1 in $t0
 			asm += "add $t0 $t0 $t1\n"
 
-			if self.summand0.summand0 != None:
-				# Speicher den Wert von $t0 in 0($sp)
-				asm += "sw $t0 "+str(s)+"($sp)"
-		
+			# Speicher den Wert von $t0 in 0($sp)
+			asm += "sw $t0 "+str(s)+"($sp)"
+
 		return asm
 
 
