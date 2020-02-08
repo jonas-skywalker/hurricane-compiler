@@ -10,5 +10,7 @@ def construct_ast(filename):
 
 pr = construct_ast("src/parser/addition.hc")
 print(pr.ausgabe(0))
-print(pr.generiere_asm())
+asm = pr.generiere_asm()
 
+with open("addition.asm", "w") as datei:
+    datei.write(asm)
