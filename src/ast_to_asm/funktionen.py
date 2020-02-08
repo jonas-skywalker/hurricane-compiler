@@ -58,12 +58,14 @@ class ASSIGN:
 		# Verschiebe Offset um 4 Byte
 		s -= 4
 
+		asm += self.fl_stat.generiere_asm()
+
 		return asm
 
 class FL_STAT:
 
 	def __init__(self, fl_stat):
-		self.fl_stat = fl_stat
+		self.fl_stat = fl_stat # Das hier ist ein String, soll aber nicht
 
 	def ausgabe(self, v):
 		if self.fl_stat == "END":
@@ -71,6 +73,8 @@ class FL_STAT:
 		else:
 			return self.fl_stat.ausgabe(v)
 
+	def generiere_asm(self):
+		return self.fl_stat.generiere_asm()
 
 class START:
 
@@ -91,6 +95,9 @@ class EXPRm1:
 		if self.comparandm1 != None:
 			ausgabe = "=="+self.comparandm1.ausgabe()
 		return self.e0.ausgabe() + ausgabe
+	
+	def generiere_asm(self):
+		return self.e0.generiere_asm()
 
 class EXPR0:
 
