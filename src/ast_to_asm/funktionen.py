@@ -75,7 +75,10 @@ class FL_STAT:
 			return self.fl_stat.ausgabe(v)
 
 	def generiere_asm(self):
-		return self.fl_stat.generiere_asm()
+		if self.fl_stat == "END":
+			return "\n"
+		else:
+			return self.fl_stat.generiere_asm()
 
 class START:
 
