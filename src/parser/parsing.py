@@ -1,6 +1,8 @@
 import itertools
 import sys
-sys.path.insert(1, './../ast_to_asm/')
+import pathlib
+funktionen_path = pathlib.Path(__file__).parent.parent.absolute() / 'ast_to_asm'
+sys.path.append(str(funktionen_path))
 import funktionen as blocks
 
 def parse(tokens):
@@ -143,7 +145,7 @@ def parse_expr_three():
         return blocks.EXPR3(None, token[0])
     assert token[1] == "open_bracket"
     em1 = parse_expr_m1()
-    assert next(tokens) == "closed_bracket"
+    assert next(tokens)[1] == "closed_bracket"
     return blocks.EXPR3(None, None, em1)
 
 def backtrack(*ts):
