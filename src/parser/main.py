@@ -8,9 +8,10 @@ def construct_ast(filename):
     ast = ps.parse(ts)
     return ast
 
-pr = construct_ast("addition.hc")
+pr = construct_ast("src/parser/addition.hc")
 print(pr.ausgabe(0))
 asm = pr.generiere_asm()
+asm += "li $v0,1\nmove $a0,$t0\nsyscall"
 
 with open("addition.asm", "w") as datei:
     datei.write(asm)

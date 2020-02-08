@@ -76,7 +76,7 @@ def screw_comments(source):
             continue
         else:
             ret += p[0]
-        return ret
+    return ret
 
 def token_stream(source):
     source = screw_comments(source)
