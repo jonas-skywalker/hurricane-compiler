@@ -14,9 +14,11 @@ def construct_ast(filename):
     c_code = get_source(filename)
     ts = lexer.token_stream(c_code)
     ast = parsing.parse(ts)
+    return ast
 
 def compile(filename):
     ast = construct_ast(filename)
+    print(ast.ausgabe(0))
 
 if __name__ == '__main__':
     filename = "test.hc"
