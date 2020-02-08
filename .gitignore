@@ -1,2 +1,2 @@
 .idea/**
-*.pyc
+src/parser/__pycache__/**
