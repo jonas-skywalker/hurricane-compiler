@@ -79,6 +79,11 @@ def screw_comments(source):
     return ret
 
 def token_stream(source):
+    lines = source.splitlines()
+    lines = filter(lambda l: not l.startswith("#KOMMENTAR:"), lines)
+    source = ""
+    for l in lines:
+        source += l
     source = screw_comments(source)
     spl = split_symbols(source)
     spl = match_keywords(spl)

@@ -28,3 +28,6 @@ lw $t1 -8($sp)
 add $t0 $t0 $t1
 sw $t0 -8($sp)
 
+li $v0,1
+move $a0,$t0
+syscall
