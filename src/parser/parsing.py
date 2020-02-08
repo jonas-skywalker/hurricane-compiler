@@ -2,12 +2,14 @@ import itertools
 import sys
 import pathlib
 funktionen_path = pathlib.Path(__file__).parent.parent.absolute() / 'ast_to_asm'
-print(funktionen_path)
 sys.path.append(str(funktionen_path))
 import funktionen as blocks
+import optimizer
 
 def parse(tokens):
-    return parse_stmt(tokens)
+    stmt = parse_stmt(tokens)
+    optimized = optimizer.optimize(stmt)
+    return optimized
 
 '''Wrapper over blocks.FL_STAT'''
 def follow_with(stmt):

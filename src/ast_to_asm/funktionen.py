@@ -16,8 +16,8 @@ class IF_COND:
 		self.fl_stat = fl_stat
 
 	def ausgabe(self, v):
-		return (v) * " " + "IF\n" + self.expr.ausgabe(v + 1) + "\n" + self.if_stat.ausgabe(
-			v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
+		return v * " " + "IF\n" + self.expr.ausgabe(v + 1) + "\n" + self.if_stat.ausgabe(
+			v + 2) + "\n" + self.fl_stat.ausgabe(v)
 
 
 class WHILE:
@@ -31,8 +31,8 @@ class WHILE:
 		self.fl_stat = fl_stat
 
 	def ausgabe(self, v):
-		return (v) * " " + "WHILE\n" + self.expr.ausgabe(v + 1) + "\n" + self.wh_stat.ausgabe(
-			v + 2) + "\n" + self.fl_stat.ausgabe(v + 1)
+		return v * " " + "WHILE\n" + self.expr.ausgabe(v + 1) + "\n" + self.wh_stat.ausgabe(
+			v + 1) + "\n" + self.fl_stat.ausgabe(v)
 
 
 class ASSIGN:
@@ -46,7 +46,8 @@ class ASSIGN:
 		self.fl_stat = fl_stat
 
 	def ausgabe(self, v):
-		return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe() + "\n" + self.fl_stat.ausgabe(v + 1)
+		return v * " " + "ASSIGN\n" + self.id + "\n" + self.expr.ausgabe(v + 1) + "\n" +\
+			   self.fl_stat.ausgabe(v)
 
 	def generiere_asm(self):
 		global s
@@ -69,7 +70,7 @@ class FL_STAT:
 
 	def ausgabe(self, v):
 		if self.fl_stat == "END":
-			return (v) * " " + self.fl_stat
+			return self.fl_stat
 		else:
 			return self.fl_stat.ausgabe(v)
 
@@ -93,12 +94,12 @@ class EXPRm1:
 		self.e0 = e0
 		self.comparandm1 = comparandm1
 
-	def ausgabe(self):
-		ausgabe = ""
+	def ausgabe(self, v):
+		ausgabe = v * " "
 		if self.comparandm1 != None:
-			ausgabe = "=="+self.comparandm1.ausgabe()
-		return self.e0.ausgabe() + ausgabe
-	
+			ausgabe = "==\n" + self.comparandm1.ausgabe(v)
+		return self.e0.ausgabe(v + 1) + ausgabe
+
 	def generiere_asm(self):
 		return self.e0.generiere_asm()
 
@@ -110,11 +111,11 @@ class EXPR0:
 		self.e1 = e1
 		self.summand0 = summand0
 
-	def ausgabe(self):
-		ausgabe = ""
+	def ausgabe(self, v):
+		ausgabe = v * " "
 		if self.summand0 != None:
-			ausgabe = "+"+self.summand0.ausgabe()
-		return self.e1.ausgabe()+ausgabe
+			ausgabe = "+\n"+self.summand0.ausgabe(v + 1)
+		return self.e1.ausgabe(v + 1)+ausgabe
 
 	def generiere_asm(self):
 		global s
@@ -158,11 +159,11 @@ class EXPR1:
 		self.e2 = e2
 		self.factor1 = factor1
 
-	def ausgabe(self):
-		ausgabe = ""
+	def ausgabe(self, v):
+		ausgabe = v * " "
 		if self.factor1 != None:
-			ausgabe = "*"+self.factor1.ausgabe()
-		return self.e2.ausgabe()+ausgabe
+			ausgabe = "*\n"+self.factor1.ausgabe(v + 1)
+		return self.e2.ausgabe(v + 1)+ausgabe
 
 	def generiere_asm(self):
 		global s
@@ -208,12 +209,12 @@ class EXPR2:
 		self.negated2 = negated2
 		self.e3 = e3
 	
-	def ausgabe(self):
+	def ausgabe(self, v):
 		if self.negated2 != None:
-			ausgabe = self.negated2.ausgabe()
+			ausgabe = "\n-" +self.negated2.ausgabe(v + 1)
 		else:
-			ausgabe = self.e3.ausgabe()
-		return ausgabe
+			ausgabe = self.e3.ausgabe(v + 1)
+		return v * " " + ausgabe
 
 	def generiere_asm(self):
 		if self.negated2 != None:
@@ -231,15 +232,14 @@ class EXPR3:
 		self.lit = lit
 		self.e0 = e0
 
-	def ausgabe(self):
-		ausgabe = ""
+	def ausgabe(self, v):
 		if self.ident != None:
 			ausgabe = self.ident
 		elif self.lit != None:
 			ausgabe = self.lit
 		else:
-			ausgabe = self.e0.ausgabe()
-		return ausgabe
+			ausgabe = "(\n" + self.e0.ausgabe(v + 1) + "\n" + v * " " + ")"
+		return v * " " + ausgabe
 	
 	def generiere_asm(self):
 		asm = ""

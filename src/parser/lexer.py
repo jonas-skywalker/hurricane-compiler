@@ -54,7 +54,32 @@ def match_idents_and_lits(tokens):
             tokens[index] = (word, new_label)
     return tokens
 
+def screw_comments(source):
+    parts = split_surround(source, "#multiline-start#", "comment-start")
+    new_sources = []
+    for (split_word, matched_label) in parts:
+        if matched_label:
+            new_sources.append((split_word, matched_label))
+        else:
+            new_sources += split_surround(split_word, "#multiline-end#", "comment-end")
+    parts = new_sources
+    ret = ""
+    in_comment = False
+    for p in parts:
+        if p[1] == "comment-start":
+            in_comment = True
+            continue
+        elif p[1] == "comment-end":
+            in_comment = False
+            continue
+        elif in_comment:
+            continue
+        else:
+            ret += p[0]
+        return ret
+
 def token_stream(source):
+    source = screw_comments(source)
     spl = split_symbols(source)
     spl = match_keywords(spl)
     spl = match_idents_and_lits(spl)

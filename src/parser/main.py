@@ -8,7 +8,7 @@ def construct_ast(filename):
     ast = ps.parse(ts)
     return ast
 
-pr = construct_ast("src/parser/addition.hc")
+pr = construct_ast("addition.hc")
 print(pr.ausgabe(0))
 asm = pr.generiere_asm()
 
