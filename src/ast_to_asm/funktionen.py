@@ -145,7 +145,7 @@ class EXPR0:
 			asm += "add $t0 $t0 $t1\n"
 
 			# Speicher den Wert von $t0 in 0($sp)
-			asm += "sw $t0 "+str(s)+"($sp)"
+			asm += "sw $t0 "+str(s)+"($sp)"+"\n"
 
 		return asm
 
