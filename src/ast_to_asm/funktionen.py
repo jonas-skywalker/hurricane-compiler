@@ -59,12 +59,14 @@ class ASSIGN:
 		# Verschiebe Offset um 4 Byte
 		s -= 4
 
+		asm += self.fl_stat.generiere_asm()
+
 		return asm
 
 class FL_STAT:
 
 	def __init__(self, fl_stat):
-		self.fl_stat = fl_stat
+		self.fl_stat = fl_stat # Das hier ist ein String, soll aber nicht
 
 	def ausgabe(self, v):
 		if self.fl_stat == "END":
@@ -72,6 +74,8 @@ class FL_STAT:
 		else:
 			return self.fl_stat.ausgabe(v)
 
+	def generiere_asm(self):
+		return self.fl_stat.generiere_asm()
 
 class START:
 
@@ -92,6 +96,9 @@ class EXPRm1:
 		if self.comparandm1 != None:
 			ausgabe = "==\n" + self.comparandm1.ausgabe(v)
 		return self.e0.ausgabe(v + 1) + ausgabe
+
+	def generiere_asm(self):
+		return self.e0.generiere_asm()
 
 class EXPR0:
 
@@ -135,10 +142,9 @@ class EXPR0:
 			# Addiere den Wert in $t0 udn in $t1 in $t0
 			asm += "add $t0 $t0 $t1\n"
 
-			if self.summand0.summand0 != None:
-				# Speicher den Wert von $t0 in 0($sp)
-				asm += "sw $t0 "+str(s)+"($sp)"
-		
+			# Speicher den Wert von $t0 in 0($sp)
+			asm += "sw $t0 "+str(s)+"($sp)"
+
 		return asm
 
 

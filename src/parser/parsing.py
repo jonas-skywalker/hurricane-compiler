@@ -2,6 +2,7 @@ import itertools
 import sys
 import pathlib
 funktionen_path = pathlib.Path(__file__).parent.parent.absolute() / 'ast_to_asm'
+print(funktionen_path)
 sys.path.append(str(funktionen_path))
 import funktionen as blocks
 
