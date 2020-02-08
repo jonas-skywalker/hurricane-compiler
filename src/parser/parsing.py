@@ -1,5 +1,7 @@
-import funktionen as blocks
 import itertools
+import sys
+sys.path.insert(1, './../ast_to_asm/')
+import funktionen as blocks
 
 def parse(tokens):
     return parse_stmt(tokens)
@@ -88,66 +90,62 @@ def parse_print(value, after):
     # Create Print-Block
     return None
 
-def parse_expr(tokens):
-    exp = []
-    for (word, label) in tokens:
-        if label in ["semicolon", "closed_bracket"]:
-            break
-        exp.append((word, label))
-    return parse_expr_m1(exp)
+tokens = None
 
-def parse_expr_m1(exp):
-    for (i, (word, label)) in enumerate(exp):
-        if label == "equals":
-            index = i
-            break
-    else:
-        return blocks.EXPRm1(parse_expr_zero(exp))
-    e1 = exp[:index]
-    e0 = exp[index + 1:]
-    return blocks.EXPRm1(parse_expr_zero(e1), parse_expr_m1(e0))
+def parse_expr(ts):
+    global tokens
+    tokens = ts
+    em1 = parse_expr_m1()
+    assert next(tokens)[1] in ["semicolon", "closed_bracket"]
+    return em1
 
-def parse_expr_zero(exp):
-    for (i, (word, label)) in enumerate(exp):
-        if label == "plus":
-            index = i
-            break
-    else:
-        return blocks.EXPR0(parse_expr_one(exp))
-    e1 = exp[:index]
-    e0 = exp[index + 1:]
-    return blocks.EXPR1(parse_expr_one(e1), parse_expr_zero(e0))
+def parse_expr_m1():
+    global tokens
+    e0 = parse_expr_zero()
+    token = next(tokens)
+    if token[1] == "equals":
+        return blocks.EXPRm1(e0, parse_expr_m1())
+    backtrack(token)
+    return blocks.EXPRm1(e0)
 
-def parse_expr_one(exp):
-    for (i, (word, label)) in enumerate(exp):
-        if label == "multi":
-            index = i
-            break
-    else:
-        return blocks.EXPR2(parse_expr_two(exp))
-    e1 = exp[:index]
-    e0 = exp[index + 1:]
-    return blocks.EXPR2(parse_expr_two(e1), parse_expr_one(e0))
+def parse_expr_zero():
+    global tokens
+    e1 = parse_expr_one()
+    token = next(tokens)
+    if token[1] == "plus":
+        return blocks.EXPR0(e1, parse_expr_zero())
+    backtrack(token)
+    return blocks.EXPR0(e1)
 
-def parse_expr_two(exp):
-    if exp[0][1] == "minus":
-        return blocks.EXPR2(parse_expr_two(exp[1:]))
-    else:
-        return blocks.EXPR2(None, parse_expr_three(exp))
+def parse_expr_one():
+    global tokens
+    e2 = parse_expr_two()
+    token = next(tokens)
+    if token[1] == "multi":
+        return blocks.EXPR1(e2, parse_expr_one())
+    backtrack(token)
+    return blocks.EXPR1(e2)
 
-def parse_expr_three(exp):
-    head = exp[0]
-    ident = None
-    lit = None
-    e0 = None
-    if head[1] == "ident":
-        ident = head[0]
-        assert len(exp) == 1
-    elif head[1] == "lit":
-        lit = head[0]
-        assert len(exp) == 1
-    else:
-        assert head[1] == "open_bracket"
-        assert exp[-1][1] == "closed_bracket"
-        e0 = parse_expr_zero(exp[1:-1]) # Get rid of brackets
-    return blocks.EXPR3(ident, lit, e0)
+def parse_expr_two():
+    global tokens
+    token = next(tokens)
+    if token[1] == "minus":
+        return blocks.EXPR2(parse_expr_two())
+    backtrack(token)
+    return blocks.EXPR2(None, parse_expr_three())
+
+def parse_expr_three():
+    global tokens
+    token = next(tokens)
+    if token[1] == "ident":
+        return blocks.EXPR3(token[0])
+    elif token[1] == "lit":
+        return blocks.EXPR3(None, token[0])
+    assert token[1] == "open_bracket"
+    em1 = parse_expr_m1()
+    assert next(tokens) == "closed_bracket"
+    return blocks.EXPR3(None, None, em1)
+
+def backtrack(*ts):
+    global tokens
+    tokens = itertools.chain(ts, tokens)
