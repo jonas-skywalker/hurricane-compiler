@@ -1,5 +1,9 @@
+import copy
+
 env = {}
 s = 0
+
+watcher_s = 0
 
 class IF_COND:
 
@@ -44,10 +48,10 @@ class ASSIGN:
 	def ausgabe(self, v):
 		return (v) * " " + "ASSIGN\n" + (v + 1) * " " + self.id + "\n" + self.expr.ausgabe() + "\n" + self.fl_stat.ausgabe(v + 1)
 
-	def generiere_asm(self, r0, r1):
+	def generiere_asm(self):
 		global s
 
-		asm = self.expr.generiere_asm()#r0, r1)
+		asm = self.expr.generiere_asm()
 
 		# Speicher Offset von $sp zu der Variable
 		env[self.id] = s
@@ -98,30 +102,43 @@ class EXPR0:
 
 	def generiere_asm(self):
 		global s
-		# Schreibe die Zahl n $to
-		# Wenn eine Variable aufgerufen wird dann wird der lw-Befehl verwendet,
-		# sonst wird eine Zahl in den Register geladen
-		asm = self.e1.generiere_asm()+"\n" # Richtig
+		global watcher_s
+		#--Erinnerung:--#
+		# Stack-Pointer wird in ASSIGN.generiere_asm() dekrementiert
+
+		# Speicher den Wert von dem linken Summant in $t0
+		asm = self.e1.generiere_asm()
+
+		# Speicher den Wert von $t0 in den Stack an 0($sp)
+		asm += "sw $t0 "+str(s)+"($sp)\n"
+
+
+		# Wenn ein rechter Summant vorhanden ist dann mache das:
 		if self.summand0 != None:
-			asm += "sw $t0 "+str(s)+"($sp)\n"
-			ls = s
-			asm += "subi $sp $sp 4\n"
-			asm += self.summand0.generiere_asm()+"\n"
-			asm += "addi $sp $sp 4\n"
+			# Der Offset wird geupdatet um den nächsten RAM Eintrag weiter unten im Stack zu speichern
+			s -= 4
+			# Speicher den Wert des rechten Summanten in $t0
+			asm += self.summand0.generiere_asm()
 
-			asm += "lw $t1 "+str(ls-s)+"($sp)\n"
+			# Der Offset wird geupdatet um wieder wie normal auf den oberen Eintrag im Stack zuzugreifen
+			s += 4
+			# Speicher den Wert in 0($sp) in $t1
+			asm += "lw $t1 "+str(s)+"($sp)\n"
+
+			# Addiere den Wert in $t0 udn in $t1 in $t0
 			asm += "add $t0 $t0 $t1\n"
-			s = ls
-		
-		asm += "sw $t0 "+str(s)+"($sp)"
 
+			if self.summand0.summand0 != None:
+				# Speicher den Wert von $t0 in 0($sp)
+				asm += "sw $t0 "+str(s)+"($sp)"
+		
 		return asm
 
 
 class EXPR1:
 
 	# EXPR1 nimmt Instanz von Typ EXPR2 (e2)
-	# factor1: optionaler Faktor
+	# factor1: optionaler Faktor von Typ EXPR1 (factor1)
 	def __init__(self, e2, factor1=None):
 		self.e2 = e2
 		self.factor1 = factor1
@@ -133,9 +150,37 @@ class EXPR1:
 		return self.e2.ausgabe()+ausgabe
 
 	def generiere_asm(self):
+		global s
+		global watcher_s
+		#--Erinnerung:--#
+		# Stack-Pointer wird in ASSIGN.generiere_asm() dekrementiert
+
+		# Speicher den Wert von dem linken Faktor in $t0
 		asm = self.e2.generiere_asm()
+
+		# Speicher den Wert von $t0 in den Stack an 0($sp)
+		asm += "sw $t0 "+str(s)+"($sp)\n"
+	
+
+		# Wenn ein rechter Faktor vorhanden ist dann mache das:
 		if self.factor1 != None:
-			asm += " mul "+self.factor1.ausgabe()
+			# Der Offset wird geupdatet um den nächsten RAM Eintrag weiter unten im Stack zu speichern
+			s -= 4
+
+			# Speicher den Wert des rechten Faktor in $t0
+			asm += self.factor1.generiere_asm()
+
+			# Der Offset wird geupdatet um wieder wie normal auf den oberen Eintrag im Stack zuzugreifen
+			s += 4
+			# Speicher den Wert in 0($sp) in $t1
+			asm += "lw $t1 "+str(s)+"($sp)\n"
+
+			# Addiere den Wert in $t0 udn in $t1 in $t0
+			asm += "mul $t0 $t0 $t1\n"
+
+			# # Speicher den Wert von $t0 in 0($sp)
+			# asm += "sw $t0 "+str(s)+"($sp)\n"
+		
 		return asm
 
 
@@ -184,13 +229,12 @@ class EXPR3:
 	def generiere_asm(self):
 		asm = ""
 		if self.ident != None:
-			# Offset der Variable von Null
-			offset_der_variable = env[self.ident]
-			# Offset vom jetzigen Stackpointer
-			o = offset_der_variable - s
-			asm += "lw $t0 "+str(o)+"($sp)"
+			# 
+			voffset = env[self.ident]
+			asm = "lw $t0 "+str(voffset)+"($sp)\n"
+			#asm = "li $t0 5\n"
 		elif self.lit != None:
-			asm = "li $t0 "+self.lit
+			asm = "li $t0 "+self.lit+"\n"
 		else:
 			asm = self.e0.generiere_asm()
 		return asm
