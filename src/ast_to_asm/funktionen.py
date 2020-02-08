@@ -82,6 +82,12 @@ class EXPRm1:
 		self.e0 = e0
 		self.comparandm1 = comparandm1
 
+	def ausgabe(self):
+		ausgabe = ""
+		if self.comparandm1 != None:
+			ausgabe = "==" self.comparandm1.ausgabe()
+		return self.e0.ausgabe() + ausgabe
+
 class EXPR0:
 
 	# EXPR0 nimmt Instanz von Typ EXPR1 (e1)

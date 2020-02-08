@@ -1,15 +1,23 @@
-def parse_file(filename):
-    c_code = get_source(filename)
-    print(c_code)
-
+import sys
+import pathlib
+p = pathlib.Path(__file__).parent.absolute() / 'parser'
+sys.path.append(str(p))
+import lexer
+import parsing
 
 def get_source(filename):
     with open(filename, "r") as infile:
-        c_code = infile.read().replace('\n', '')
-    #c_code = c_code.replace(" ", "")
+        c_code = infile.read()
     return c_code
 
+def construct_ast(filename):
+    c_code = get_source(filename)
+    ts = lexer.token_stream(c_code)
+    ast = parsing.parse(ts)
+
+def compile(filename):
+    ast = construct_ast(filename)
 
 if __name__ == '__main__':
-    filename = "src/test.c"
-    parse_file(filename)
+    filename = "test.hc"
+    compile(filename)
